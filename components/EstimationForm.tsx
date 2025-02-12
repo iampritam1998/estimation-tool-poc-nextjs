@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-
+import { ErrorMessage } from "./../utils/Constants";
 interface FormData {
   id: string;
   level: string;
@@ -11,6 +11,7 @@ const EstimationForm: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
   const [isLoading, setLoading] = useState<boolean>(false);
+
   const {
     register,
     handleSubmit,
@@ -71,7 +72,6 @@ const EstimationForm: React.FC = () => {
               <option value="beginner">Beginner</option>
               <option value="intermediate">Intermediate</option>
               <option value="expert">Expert</option>
-              <option value="pro">Pro</option>
             </select>
             {errors.level && (
               <p className="error-message">{errors.level.message}</p>
@@ -86,16 +86,29 @@ const EstimationForm: React.FC = () => {
         <div>
           {data && (
             <div>
-              <h3>Result</h3>
-              <div> Complexity : {data?.Complexity || ""}</div>
-              <br />
-              <div> Risk : {data?.Risk || ""}</div>
-              <br />
-              <div>
-                Estimated Story Points : {data?.Estimated_Story_Points || ""}
-              </div>
-              <br />
-              <div>Description : {data?.Description || ""}</div>
+              {data?.ActualStoryPoint > 13 ? (
+                <p style={{ color: "red", fontSize: 15, textAlign: "center" }}>
+                  {ErrorMessage.BEYORD_EFFORT_ERROR_MESSAGE}
+                </p>
+              ) : (
+                <div>
+                  <h3>Result</h3>
+                  <div> Complexity : {data?.Complexity || ""}</div>
+                  <br />
+                  <div> Risk : {data?.Risk || ""}</div>
+                  <br />
+                  <div>
+                    Fibonaaci Story Points :{" "}
+                    {data?.Estimated_Story_Points || ""}
+                  </div>
+                  <br />
+                  <div>
+                    Actual Story Points : {data?.ActualStoryPoint || ""}
+                  </div>
+                  <br />
+                  <div>Description : {data?.Description || ""}</div>
+                </div>
+              )}
             </div>
           )}
           {error && (
